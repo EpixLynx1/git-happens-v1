@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>GhostKey – Sign in</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f1f3f4;
+  --card:#fff;
+  --border:#dadce0;
+  --primary:#1a73e8;
+  --primary-hover:#1765cc;
+  --fg:#202124;
+  --muted:#5f6368;
+  --danger:#d93025;
+  --success:#1e8e3e;
+  --amber:#f9ab00;
+  --focus-ring:rgba(26,115,232,.25);
+}
+html,body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Roboto',sans-serif;
+  font-size:14px;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:400px;
+}
+
+/* ── card shell ── */
+.gcard{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  width:360px;
+  padding:48px 40px 36px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;
+}
+.gcard + .gfooter{margin-top:16px}
+
+/* ── google logo ── */
+.glogo{margin-bottom:24px}
+.glogo svg{display:block}
+
+/* ── headings ── */
+.g-title{
+  font-family:'Google Sans',sans-serif;
+  font-size:24px;
+  font-weight:400;
+  color:var(--fg);
+  margin-bottom:8px;
+  text-align:center;
+  line-height:1.3;
+}
+.g-sub{
+  font-size:16px;
+  color:var(--muted);
+  margin-bottom:28px;
+  text-align:center;
+  line-height:1.4;
+}
+.g-sub strong{color:var(--fg)}
+
+/* ── material outlined input ── */
+.mat-field{
+  position:relative;
+  width:100%;
+  margin-bottom:24px;
+}
+.mat-field input{
+  width:100%;
+  height:56px;
+  padding:16px 48px 0 16px;
+  font-family:'Roboto',sans-serif;
+  font-size:16px;
+  color:var(--fg);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:4px;
+  outline:none;
+  transition:border-color .15s;
+  appearance:none;
+}
+.mat-field input:focus{
+  border:2px solid var(--primary);
+}
+.mat-field input:focus ~ label,
+.mat-field input:not(:placeholder-shown) ~ label{
+  top:8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.mat-field input:focus ~ label{color:var(--primary)}
+.mat-field label{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:16px;
+  color:var(--muted);
+  pointer-events:none;
+  transition:top .12s,font-size .12s,color .12s;
+  background:#fff;
+  padding:0 2px;
+}
+.mat-field .eye-btn{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:var(--muted);
+  padding:4px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.mat-field .eye-btn:hover{background:#f1f3f4}
+.mat-field .field-err{
+  font-size:12px;
+  color:var(--danger);
+  margin-top:4px;
+  padding-left:16px;
+  display:none;
+}
+.mat-field.has-error input{border-color:var(--danger)!important}
+.mat-field.has-error label{color:var(--danger)!important}
+.mat-field.has-error .field-err{display:block}
+
+/* ── buttons ── */
+.g-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:100%;
+  margin-top:8px;
+}
+.gbtn-text{
+  font-family:'Google Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  color:var(--primary);
+  background:none;
+  border:none;
+  border-radius:4px;
+  padding:10px 8px;
+  cursor:pointer;
+  letter-spacing:.25px;
+  transition:background .15s;
+}
+.gbtn-text:hover{background:#e8f0fe}
+.gbtn-text:disabled{color:var(--border);cursor:not-allowed}
+.gbtn-filled{
+  font-family:'Google Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  color:#fff;
+  background:var(--primary);
+  border:none;
+  border-radius:4px;
+  padding:10px 24px;
+  cursor:pointer;
+  letter-spacing:.25px;
+  transition:background .15s,box-shadow .15s;
+  min-width:88px;
+}
+.gbtn-filled:hover:not(:disabled){background:var(--primary-hover);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.gbtn-filled:disabled{background:#f1f3f4;color:#bdc1c6;cursor:not-allowed}
+.gbtn-outline{
+  font-family:'Google Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  color:var(--primary);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:9px 23px;
+  cursor:pointer;
+  letter-spacing:.25px;
+  transition:background .15s,border-color .15s;
+}
+.gbtn-outline:hover:not(:disabled){background:#e8f0fe;border-color:#d2e3fc}
+.gbtn-outline:disabled{color:#bdc1c6;cursor:not-allowed}
+.gbtn-danger{
+  font-family:'Google Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  color:#fff;
+  background:var(--danger);
+  border:none;
+  border-radius:4px;
+  padding:10px 24px;
+  cursor:pointer;
+  letter-spacing:.25px;
+  transition:background .15s;
+}
+.gbtn-danger:hover{background:#c5221f}
+
+/* ── step progress ── */
+.g-steps{
+  display:flex;
+  gap:6px;
+  margin-bottom:28px;
+  width:100%;
+}
+.gstep{
+  flex:1;
+  height:4px;
+  border-radius:2px;
+  background:#e8eaed;
+  transition:background .3s;
+}
+.gstep.act{background:#aecbfa}
+.gstep.done{background:var(--primary)}
+
+.g-steplbl{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:20px;
+  align-self:flex-start;
+  letter-spacing:.1px;
+}
+
+/* ── char indicator ── */
+.char-row{
+  display:flex;
+  gap:5px;
+  min-height:10px;
+  margin-bottom:4px;
+  flex-wrap:wrap;
+  align-self:flex-start;
+  padding-left:2px;
+}
+.cdot{width:8px;height:8px;border-radius:50%;background:#e8eaed;display:inline-block;transition:background .1s}
+.cdot.ok{background:var(--success)}.cdot.bad{background:var(--danger)}.cdot.fill{background:var(--primary)}
+
+/* ── info / status messages ── */
+.g-msg{
+  font-size:12px;
+  padding:10px 16px;
+  border-radius:4px;
+  width:100%;
+  margin-bottom:16px;
+  display:none;
+  line-height:1.5;
+}
+.g-msg.ok{background:#e6f4ea;color:var(--success)}
+.g-msg.err{background:#fce8e6;color:var(--danger)}
+.g-msg.show{display:block}
+
+/* ── dot / reaction cards ── */
+.g-section{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:20px;
+  margin-bottom:24px;
+}
+.g-section-title{
+  font-size:12px;
+  font-weight:500;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:14px;
+}
+canvas.dotcv{
+  display:block;
+  width:100%;
+  background:#f8f9fa;
+  border:1px solid #e8eaed;
+  border-radius:6px;
+  cursor:crosshair;
+  margin-top:4px;
+}
+
+/* ── reaction button ── */
+.rbtn{
+  width:100%;
+  height:72px;
+  border-radius:6px;
+  background:#f8f9fa;
+  border:1px solid #e8eaed;
+  color:var(--muted);
+  font-family:'Google Sans',sans-serif;
+  font-size:15px;
+  font-weight:500;
+  cursor:not-allowed;
+  letter-spacing:.25px;
+  transition:all .2s;
+}
+.rbtn.counting{
+  background:#fef7e0;
+  border-color:#f9ab00;
+  color:#b06000;
+  font-size:28px;
+  cursor:not-allowed;
+}
+.rbtn.go{
+  background:#e6f4ea;
+  border-color:var(--success);
+  color:var(--success);
+  cursor:pointer;
+  box-shadow:0 1px 4px rgba(30,142,62,.2);
+}
+.rbtn.go:active{transform:scale(.98)}
+.rbtn.done{
+  background:#e6f4ea;
+  border-color:#a8d5b5;
+  color:var(--success);
+  cursor:default;
+}
+.rbtn-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
+
+/* ── dashboard score ── */
+.score-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  margin-bottom:24px;
+}
+.score-ring-wrap{
+  position:relative;
+  width:120px;
+  height:120px;
+  margin-bottom:12px;
+}
+svg.arc{transform:rotate(-90deg)}
+.arc-track{fill:none;stroke:#e8eaed;stroke-width:9}
+.arc-fill{fill:none;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.arc-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.arc-pct{font-size:22px;font-weight:700;font-family:'Google Sans',sans-serif;line-height:1}
+.arc-sub{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+
+.verdict-pill{
+  padding:8px 20px;
+  border-radius:100px;
+  font-size:13px;
+  font-weight:500;
+  font-family:'Google Sans',sans-serif;
+  letter-spacing:.25px;
+  margin-bottom:20px;
+  width:100%;
+  text-align:center;
+}
+.verdict-pill.ok{background:#e6f4ea;color:var(--success)}
+.verdict-pill.warn{background:#fef7e0;color:#b06000}
+.verdict-pill.fail{background:#fce8e6;color:var(--danger)}
+
+.score-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  width:100%;
+  margin-bottom:20px;
+}
+.score-cell{
+  background:#f8f9fa;
+  border:1px solid #e8eaed;
+  border-radius:8px;
+  padding:12px 10px;
+  text-align:center;
+}
+.score-cell .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.score-cell .val{font-size:18px;font-weight:700;font-family:'Google Sans',sans-serif;margin-bottom:4px}
+.score-cell .bar-bg{background:#e8eaed;border-radius:99px;height:3px;overflow:hidden}
+.score-cell .bar-fg{height:100%;border-radius:99px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+
+.dash-actions{display:flex;gap:8px;width:100%;margin-bottom:8px}
+.dash-actions .gbtn-outline,.dash-actions .gbtn-danger{flex:1;text-align:center}
+
+/* ── footer ── */
+.gfooter-links{
+  display:flex;
+  gap:20px;
+  justify-content:flex-start;
+  align-items:center;
+  width:100%;
+  padding:0 4px;
+}
+.gfooter-links a{
+  font-size:12px;
+  color:var(--muted);
+  text-decoration:none;
+  letter-spacing:.1px;
+}
+.gfooter-links a:hover{text-decoration:underline}
+.gfooter-right{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* ── page routing ── */
+.page{display:none}
+.page.active{display:flex;flex-direction:column;align-items:center;width:100%}
+.hidden{display:none!important}
+
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.page.active{animation:fadein .18s ease}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section class="page active" id="page-home">
+  <div class="gcard">
+    <div class="glogo">
+      <!-- Google G logo -->
+      <svg width="75" height="24" viewBox="0 0 75 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M29.64 12.2c0-.63-.06-1.25-.16-1.84H16.2v3.48h7.56c-.33 1.75-1.31 3.23-2.8 4.22v3.52h4.52c2.64-2.43 4.16-6 4.16-9.38z" fill="#4285F4"/>
+        <path d="M16.2 22.8c3.78 0 6.96-1.25 9.28-3.42l-4.52-3.52c-1.26.84-2.86 1.34-4.76 1.34-3.66 0-6.76-2.47-7.87-5.8H.67v3.62C2.98 20.11 9.14 22.8 16.2 22.8z" fill="#34A853"/>
+        <path d="M8.33 11.4a8.24 8.24 0 0 1 0-5.26V2.52H.67A13.98 13.98 0 0 0 .2 9.77c0 2.56.62 4.98 1.74 7.12l5.85-4.06-.3-1.43z" fill="#FBBC05"/>
+        <path d="M16.2 5.34c2.06 0 3.91.71 5.37 2.1l4.02-4.02C23.15 1.18 20 0 16.2 0 9.14 0 2.98 2.7.67 7.58l5.85 4.06C7.63 8.3 10.54 5.34 16.2 5.34z" fill="#EA4335"/>
+        <text x="38" y="18" font-family="'Product Sans','Google Sans',sans-serif" font-size="16" fill="#202124" font-weight="400" letter-spacing=".2">GhostKey</text>
+      </svg>
+    </div>
+
+    <h1 class="g-title">Sign in</h1>
+    <p class="g-sub">to continue to GhostKey</p>
+
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:24px">
+      <button class="gbtn-filled" id="btn-goto-register" style="width:100%;padding:12px 24px;font-size:15px">Set up my profile</button>
+      <button class="gbtn-outline" id="btn-goto-verify" style="width:100%;padding:11px 23px;font-size:15px">Sign in</button>
+    </div>
+
+    <p id="no-profile-msg" class="hidden" style="font-size:12px;color:var(--danger);text-align:center">No profile found. Set one up first.</p>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;width:360px;margin-top:12px;padding:0 4px">
+    <div class="gfooter-links">
+      <a href="#">English (US)</a>
+    </div>
+    <div class="gfooter-links">
+      <a href="#">Help</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section class="page" id="page-register">
+  <div class="gcard">
+    <div class="glogo">
+      <svg width="75" height="24" viewBox="0 0 75 24" fill="none"><path d="M29.64 12.2c0-.63-.06-1.25-.16-1.84H16.2v3.48h7.56c-.33 1.75-1.31 3.23-2.8 4.22v3.52h4.52c2.64-2.43 4.16-6 4.16-9.38z" fill="#4285F4"/><path d="M16.2 22.8c3.78 0 6.96-1.25 9.28-3.42l-4.52-3.52c-1.26.84-2.86 1.34-4.76 1.34-3.66 0-6.76-2.47-7.87-5.8H.67v3.62C2.98 20.11 9.14 22.8 16.2 22.8z" fill="#34A853"/><path d="M8.33 11.4a8.24 8.24 0 0 1 0-5.26V2.52H.67A13.98 13.98 0 0 0 .2 9.77c0 2.56.62 4.98 1.74 7.12l5.85-4.06-.3-1.43z" fill="#FBBC05"/><path d="M16.2 5.34c2.06 0 3.91.71 5.37 2.1l4.02-4.02C23.15 1.18 20 0 16.2 0 9.14 0 2.98 2.7.67 7.58l5.85 4.06C7.63 8.3 10.54 5.34 16.2 5.34z" fill="#EA4335"/><text x="38" y="18" font-family="'Google Sans',sans-serif" font-size="16" fill="#202124">GhostKey</text></svg>
+    </div>
+    <h1 class="g-title">Create account</h1>
+    <p class="g-sub">for GhostKey</p>
+
+    <div class="g-steps">
+      <div class="gstep act" id="rp1"></div>
+      <div class="gstep" id="rp2"></div>
+      <div class="gstep" id="rp3"></div>
+    </div>
+    <p class="g-steplbl" id="r-step-lbl">Step 1 of 3 — Create a passphrase</p>
+
+    <!-- Step 1 -->
+    <div id="r-step1" style="width:100%">
+      <div class="char-row" id="r-dots"></div>
+      <div class="mat-field" id="r-field">
+        <input type="password" id="r-inp" placeholder=" " autocomplete="off"/>
+        <label for="r-inp">Passphrase</label>
+        <button class="eye-btn" id="eye-r" tabindex="-1">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <div class="field-err" id="r-err">Use at least 6 characters</div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:28px;line-height:1.5">This becomes your secret key. Don't forget it.</p>
+      <div class="g-actions">
+        <button class="gbtn-text" id="r-back">Cancel</button>
+        <button class="gbtn-filled" id="r-next1" disabled>Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="r-step2" class="hidden" style="width:100%">
+      <div class="g-section">
+        <div class="g-section-title">Dot pattern</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5">Click all 5 dots in any order. Remember your sequence.</p>
+        <canvas class="dotcv" id="dotpat-r" height="155"></canvas>
+        <div class="g-msg ok" id="r-dot-done">✓ Pattern saved</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="r-step3" class="hidden" style="width:100%">
+      <div class="g-section">
+        <div class="g-section-title">Reaction test</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5">Click the button the moment it turns green.</p>
+        <button class="rbtn" id="r-rbtn">START</button>
+        <p class="rbtn-hint" id="r-rres"></p>
+      </div>
+      <div class="g-actions">
+        <span></span>
+        <button class="gbtn-filled hidden" id="btn-save-profile">Save profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;width:360px;margin-top:12px;padding:0 4px">
+    <div class="gfooter-links"><a href="#">Help</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section class="page" id="page-verify">
+  <div class="gcard">
+    <div class="glogo">
+      <svg width="75" height="24" viewBox="0 0 75 24" fill="none"><path d="M29.64 12.2c0-.63-.06-1.25-.16-1.84H16.2v3.48h7.56c-.33 1.75-1.31 3.23-2.8 4.22v3.52h4.52c2.64-2.43 4.16-6 4.16-9.38z" fill="#4285F4"/><path d="M16.2 22.8c3.78 0 6.96-1.25 9.28-3.42l-4.52-3.52c-1.26.84-2.86 1.34-4.76 1.34-3.66 0-6.76-2.47-7.87-5.8H.67v3.62C2.98 20.11 9.14 22.8 16.2 22.8z" fill="#34A853"/><path d="M8.33 11.4a8.24 8.24 0 0 1 0-5.26V2.52H.67A13.98 13.98 0 0 0 .2 9.77c0 2.56.62 4.98 1.74 7.12l5.85-4.06-.3-1.43z" fill="#FBBC05"/><path d="M16.2 5.34c2.06 0 3.91.71 5.37 2.1l4.02-4.02C23.15 1.18 20 0 16.2 0 9.14 0 2.98 2.7.67 7.58l5.85 4.06C7.63 8.3 10.54 5.34 16.2 5.34z" fill="#EA4335"/><text x="38" y="18" font-family="'Google Sans',sans-serif" font-size="16" fill="#202124">GhostKey</text></svg>
+    </div>
+    <h1 class="g-title">Welcome back</h1>
+    <p class="g-sub">Sign in to GhostKey</p>
+
+    <div class="g-steps">
+      <div class="gstep act" id="vp1"></div>
+      <div class="gstep" id="vp2"></div>
+      <div class="gstep" id="vp3"></div>
+    </div>
+    <p class="g-steplbl" id="v-step-lbl">Step 1 of 3 — Enter your passphrase</p>
+
+    <!-- Step 1 -->
+    <div id="v-step1" style="width:100%">
+      <div class="char-row" id="v-dots"></div>
+      <div class="mat-field">
+        <input type="password" id="v-inp" placeholder=" " autocomplete="off"/>
+        <label for="v-inp">Passphrase</label>
+        <button class="eye-btn" id="eye-v" tabindex="-1">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="g-msg ok show hidden" id="v-accepted">✓ Passphrase matched</div>
+      <div class="g-actions" style="margin-top:8px">
+        <button class="gbtn-text" id="v-back">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="v-step2" class="hidden" style="width:100%">
+      <div class="g-section">
+        <div class="g-section-title">Dot pattern</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5">Click the dots in the same order as when you set up your profile.</p>
+        <canvas class="dotcv" id="dotpat-v" height="155"></canvas>
+        <div class="g-msg ok" id="v-dot-done">✓ Pattern matched</div>
+        <div class="g-msg err" id="v-dot-err">✗ Wrong order — try again</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="v-step3" class="hidden" style="width:100%">
+      <div class="g-section">
+        <div class="g-section-title">Reaction test</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5">Click the button the moment it turns green.</p>
+        <button class="rbtn" id="v-rbtn">START</button>
+        <p class="rbtn-hint" id="v-rres"></p>
+      </div>
+      <div class="g-actions">
+        <span></span>
+        <button class="gbtn-filled hidden" id="btn-run-analysis">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;width:360px;margin-top:12px;padding:0 4px">
+    <div class="gfooter-links"><a href="#">Help</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="page" id="page-dashboard">
+  <div class="gcard">
+    <div class="glogo">
+      <svg width="75" height="24" viewBox="0 0 75 24" fill="none"><path d="M29.64 12.2c0-.63-.06-1.25-.16-1.84H16.2v3.48h7.56c-.33 1.75-1.31 3.23-2.8 4.22v3.52h4.52c2.64-2.43 4.16-6 4.16-9.38z" fill="#4285F4"/><path d="M16.2 22.8c3.78 0 6.96-1.25 9.28-3.42l-4.52-3.52c-1.26.84-2.86 1.34-4.76 1.34-3.66 0-6.76-2.47-7.87-5.8H.67v3.62C2.98 20.11 9.14 22.8 16.2 22.8z" fill="#34A853"/><path d="M8.33 11.4a8.24 8.24 0 0 1 0-5.26V2.52H.67A13.98 13.98 0 0 0 .2 9.77c0 2.56.62 4.98 1.74 7.12l5.85-4.06-.3-1.43z" fill="#FBBC05"/><path d="M16.2 5.34c2.06 0 3.91.71 5.37 2.1l4.02-4.02C23.15 1.18 20 0 16.2 0 9.14 0 2.98 2.7.67 7.58l5.85 4.06C7.63 8.3 10.54 5.34 16.2 5.34z" fill="#EA4335"/><text x="38" y="18" font-family="'Google Sans',sans-serif" font-size="16" fill="#202124">GhostKey</text></svg>
+    </div>
+    <h1 class="g-title" id="dash-title">Verification result</h1>
+
+    <div class="score-wrap">
+      <div class="score-ring-wrap">
+        <svg class="arc" width="120" height="120" viewBox="0 0 120 120">
+          <circle class="arc-track" cx="60" cy="60" r="50"/>
+          <circle class="arc-fill" id="arc-fill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="314" stroke="#1a73e8"/>
+        </svg>
+        <div class="arc-label">
+          <div class="arc-pct" id="overall-val">0%</div>
+          <div class="arc-sub">trust</div>
+        </div>
+      </div>
+      <div class="verdict-pill" id="verdict"></div>
+    </div>
+
+    <div class="score-grid" id="sgrid"></div>
+
+    <div class="dash-actions">
+      <button class="gbtn-outline" id="btn-test-again">Try again</button>
+      <button class="gbtn-danger" id="btn-reregister">Reset</button>
+    </div>
+    <button class="gbtn-outline" id="btn-simulate" style="width:100%;color:#b06000;border-color:#f9ab00">Simulate impostor</button>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;width:360px;margin-top:12px;padding:0 4px">
+    <div class="gfooter-links"><a href="#">Help</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+
+const $    = id => document.getElementById(id);
+const show = el => { el.classList.remove('hidden'); el.classList.add('show'); };
+const hide = el => { el.classList.add('hidden'); el.classList.remove('show'); };
+const msg  = (el, vis) => vis ? el.classList.add('show') : el.classList.remove('show');
+
+function saveProfile(p){ localStorage.setItem('gk_profile', JSON.stringify(p)); }
+function loadProfile(){ try{ return JSON.parse(localStorage.getItem('gk_profile')); }catch{ return null; } }
+function clearProfile(){ localStorage.removeItem('gk_profile'); }
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+/* eye toggle */
+function eyeToggle(inputEl, btnEl){
+  btnEl.addEventListener('click', () => {
+    inputEl.type = inputEl.type === 'password' ? 'text' : 'password';
+  });
+}
+eyeToggle($('r-inp'), $('eye-r'));
+eyeToggle($('v-inp'), $('eye-v'));
+
+/* progress */
+function setProgress(prefix, step){
+  for(let i = 1; i <= 3; i++){
+    const el = $(`${prefix}p${i}`);
+    el.classList.remove('act','done');
+    if(i < step)        el.classList.add('done');
+    else if(i === step) el.classList.add('act');
+  }
+}
+
+/* ── dot canvas ── */
+function makeDotCanvas(canvasId, onComplete, savedDots){
+  const canvas = $(canvasId);
+  const fresh  = canvas.cloneNode(false);
+  canvas.parentNode.replaceChild(fresh, canvas);
+  const cv  = $(canvasId);
+  const ctx = cv.getContext('2d');
+  const W   = cv.getBoundingClientRect().width || cv.offsetWidth || 280;
+  const H   = cv.height;
+  cv.width  = W;
+
+  const RADIUS = 14, PAD = 20, COUNT = 5;
+  let clickOrder = [], done = false;
+
+  function randomDots(){
+    const pts = []; let tries = 0;
+    while(pts.length < COUNT && tries++ < 800){
+      const x = PAD + Math.random()*(W-2*PAD);
+      const y = PAD + Math.random()*(H-2*PAD);
+      if(pts.every(p => Math.hypot(p.x-x,p.y-y) > RADIUS*3.2)) pts.push({x,y});
+    }
+    return pts;
+  }
+
+  const dots = savedDots ? savedDots.map(d=>({x:d.x,y:d.y})) : randomDots();
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    if(clickOrder.length > 1){
+      ctx.beginPath();
+      ctx.strokeStyle='rgba(26,115,232,.3)';
+      ctx.lineWidth=1.5;
+      ctx.setLineDash([4,4]);
+      ctx.moveTo(dots[clickOrder[0]].x,dots[clickOrder[0]].y);
+      for(let k=1;k<clickOrder.length;k++) ctx.lineTo(dots[clickOrder[k]].x,dots[clickOrder[k]].y);
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    dots.forEach((d,i)=>{
+      const hit = clickOrder.includes(i);
+      ctx.beginPath(); ctx.arc(d.x,d.y,RADIUS,0,Math.PI*2);
+      ctx.strokeStyle = hit ? '#1e8e3e' : '#dadce0';
+      ctx.lineWidth   = hit ? 2 : 1.5;
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(d.x,d.y,RADIUS-1.5,0,Math.PI*2);
+      ctx.fillStyle = hit ? '#e6f4ea' : '#f8f9fa';
+      ctx.fill();
+      ctx.fillStyle    = hit ? '#1e8e3e' : '#5f6368';
+      ctx.font         = 'bold 12px Roboto,sans-serif';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(i+1,d.x,d.y);
+    });
+  }
+
+  cv.addEventListener('click', e=>{
+    if(done) return;
+    const r  = cv.getBoundingClientRect();
+    const mx = (e.clientX-r.left)*(W/r.width);
+    const my = (e.clientY-r.top)*(H/r.height);
+    for(let i=0;i<dots.length;i++){
+      if(!clickOrder.includes(i) && Math.hypot(dots[i].x-mx,dots[i].y-my)<RADIUS+5){
+        clickOrder.push(i); draw();
+        if(clickOrder.length===COUNT){ done=true; onComplete(dots.slice(),clickOrder.slice()); }
+        break;
+      }
+    }
+  });
+  draw();
+}
+
+/* ── reaction ── */
+function makeReaction(btnId, resId, onDone){
+  const btn = $(btnId), res = $(resId);
+  btn.disabled=false; btn.textContent='START'; btn.className='rbtn'; res.textContent='';
+  let goTime=null,tid=null,countTid=null,phase='idle';
+
+  btn.addEventListener('click', function onClick(){
+    if(phase==='idle'){ startCountdown(); }
+    else if(phase==='go'){
+      const rt=Date.now()-goTime; clearTimeout(tid);
+      phase='done'; btn.className='rbtn done'; btn.disabled=true;
+      btn.textContent=`${rt} ms`;
+      res.textContent = rt<200?'⚡ Excellent!':rt<350?'✓ Good':rt<600?'~ Average':'◻ Slow';
+      setTimeout(()=>onDone(rt),350);
+    }
+  });
+
+  function startCountdown(){
+    phase='counting'; btn.disabled=true; btn.className='rbtn counting';
+    let n=3; btn.textContent=n;
+    countTid=setInterval(()=>{
+      n--;
+      if(n>0){ btn.textContent=n; }
+      else {
+        clearInterval(countTid); phase='waiting'; btn.textContent='…';
+        setTimeout(triggerGo, 500+Math.random()*1500);
+      }
+    },900);
+  }
+  function triggerGo(){
+    phase='go'; btn.className='rbtn go'; btn.textContent='NOW!';
+    btn.disabled=false; goTime=Date.now();
+    tid=setTimeout(()=>{
+      if(phase!=='go') return;
+      phase='idle'; btn.className='rbtn'; btn.textContent='Too slow — try again'; btn.disabled=false; res.textContent='';
+    },3000);
+  }
+}
+
+/* ── register ── */
+let regData={passphrase:'',dotPositions:[],dotOrder:[],reactionMs:null,typingMs:0,typingErrors:0};
+let rTypingStart=null, rTypingErrors=0;
+
+function setRegStep(n){
+  ['r-step1','r-step2','r-step3'].forEach((id,i)=>$(id).classList.toggle('hidden',i+1!==n));
+  setProgress('r',n);
+  $('r-step-lbl').textContent=[
+    'Step 1 of 3 — Create a passphrase',
+    'Step 2 of 3 — Set your dot pattern',
+    'Step 3 of 3 — Reaction test'
+  ][n-1];
+  if(n===2){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const dm=$('r-dot-done'); dm.classList.remove('show');
+      makeDotCanvas('dotpat-r',(pos,ord)=>{
+        regData.dotPositions=pos; regData.dotOrder=ord;
+        dm.classList.add('show');
+        setTimeout(()=>setRegStep(3),700);
+      },null);
+    }));
+  }
+  if(n===3){
+    hide($('btn-save-profile'));
+    makeReaction('r-rbtn','r-rres',ms=>{ regData.reactionMs=ms; show($('btn-save-profile')); });
+  }
+}
+
+const rInp=$('r-inp'), rDots=$('r-dots');
+rInp.addEventListener('input',()=>{
+  const v=rInp.value;
+  rDots.innerHTML='';
+  for(const c of v){ const d=document.createElement('span'); d.className='cdot fill'; rDots.appendChild(d); }
+  $('r-next1').disabled=v.length<6;
+  $('r-field').classList.remove('has-error');
+});
+rInp.addEventListener('keydown',e=>{
+  /* start timer on first real keystroke */
+  if(!rTypingStart && e.key.length===1) rTypingStart=Date.now();
+  /* count each backspace/delete as one error */
+  if(e.key==='Backspace'||e.key==='Delete') rTypingErrors++;
+  if(e.key==='Enter'&&rInp.value.length>=6) gotoRStep2();
+});
+$('r-next1').addEventListener('click',gotoRStep2);
+
+function gotoRStep2(){
+  if(rInp.value.length<6){ $('r-field').classList.add('has-error'); return; }
+  regData.passphrase   = rInp.value;
+  regData.typingMs     = rTypingStart ? Date.now()-rTypingStart : 0;
+  regData.typingErrors = rTypingErrors;
+  setRegStep(2);
+}
+
+$('btn-save-profile').addEventListener('click',()=>{
+  saveProfile(regData); showPage('page-home'); resetRegister();
+});
+
+function resetRegister(){
+  rInp.value=''; rDots.innerHTML=''; $('r-next1').disabled=true;
+  $('r-field').classList.remove('has-error');
+  hide($('btn-save-profile'));
+  rTypingStart=null; rTypingErrors=0;
+  regData={passphrase:'',dotPositions:[],dotOrder:[],reactionMs:null,typingMs:0,typingErrors:0};
+  setRegStep(1);
+}
+
+/* ── verify ── */
+let verData={passphraseOk:false,dotOrderOk:false,reactionMs:null,typingMs:0,typingErrors:0};
+let vTypingStart=null, vTypingErrors=0;
+
+function setVerStep(n){
+  ['v-step1','v-step2','v-step3'].forEach((id,i)=>$(id).classList.toggle('hidden',i+1!==n));
+  setProgress('v',n);
+  $('v-step-lbl').textContent=[
+    'Step 1 of 3 — Enter your passphrase',
+    'Step 2 of 3 — Repeat your dot pattern',
+    'Step 3 of 3 — Reaction test'
+  ][n-1];
+  if(n===2){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>initVerifyDots()));
+  }
+  if(n===3){
+    hide($('btn-run-analysis'));
+    makeReaction('v-rbtn','v-rres',ms=>{ verData.reactionMs=ms; show($('btn-run-analysis')); });
+  }
+}
+
+const vInp=$('v-inp'), vDots=$('v-dots');
+vInp.addEventListener('keydown',e=>{
+  if(!vTypingStart && e.key.length===1) vTypingStart=Date.now();
+  if(e.key==='Backspace'||e.key==='Delete') vTypingErrors++;
+});
+vInp.addEventListener('input',()=>{
+  const profile=loadProfile(), v=vInp.value;
+  vDots.innerHTML='';
+  if(!profile) return;
+  for(let i=0;i<v.length;i++){
+    const d=document.createElement('span');
+    d.className='cdot '+(v[i]===profile.passphrase[i]?'ok':'bad');
+    vDots.appendChild(d);
+  }
+  if(v===profile.passphrase){
+    verData.passphraseOk  = true;
+    verData.typingMs      = vTypingStart ? Date.now()-vTypingStart : 0;
+    verData.typingErrors  = vTypingErrors;
+    show($('v-accepted'));
+    vInp.disabled=true;
+    setTimeout(()=>setVerStep(2),600);
+  }
+});
+
+function initVerifyDots(){
+  const profile=loadProfile(); if(!profile) return;
+  $('v-dot-done').classList.remove('show');
+  $('v-dot-err').classList.remove('show');
+  makeDotCanvas('dotpat-v',(pos,ord)=>{
+    const exp=profile.dotOrder;
+    const ok=ord.length===exp.length&&ord.every((v,i)=>v===exp[i]);
+    verData.dotOrderOk=ok;
+    if(ok){ $('v-dot-done').classList.add('show'); setTimeout(()=>setVerStep(3),700); }
+    else {
+      $('v-dot-err').classList.add('show');
+      setTimeout(()=>{
+        $('v-dot-err').classList.remove('show');
+        requestAnimationFrame(()=>requestAnimationFrame(()=>initVerifyDots()));
+      },1400);
+    }
+  },profile.dotPositions);
+}
+
+$('btn-run-analysis').addEventListener('click',showDashboard);
+
+function resetVerify(){
+  vInp.value=''; vInp.disabled=false; vDots.innerHTML='';
+  hide($('v-accepted')); $('v-dot-done').classList.remove('show'); $('v-dot-err').classList.remove('show');
+  hide($('btn-run-analysis'));
+  vTypingStart=null; vTypingErrors=0;
+  verData={passphraseOk:false,dotOrderOk:false,reactionMs:null,typingMs:0,typingErrors:0};
+  setVerStep(1);
+}
+
+/* ── dashboard ── */
+function showDashboard(){
+  const profile = loadProfile();
+
+  /* ── passphrase biometric score ── */
+  const textOk = verData.passphraseOk;
+
+  /* Typing speed: compare duration to registered baseline.
+     Allow ±30% without penalty; every extra 10% deviation costs ~12 pts. */
+  const profMs     = profile && profile.typingMs  > 0 ? profile.typingMs  : 2000;
+  const verMs      = verData.typingMs > 0 ? verData.typingMs : profMs;
+  const speedRatio = verMs / profMs;                        /* 1.0 = identical */
+  const speedScore = textOk
+    ? Math.max(0, Math.round(100 - Math.abs(speedRatio - 1) * 120))
+    : 0;
+
+  /* Error count: compare backspace presses to registered baseline.
+     0 difference = 100; each extra error costs 18 pts. */
+  const profErr  = profile ? (profile.typingErrors || 0) : 0;
+  const errDiff  = Math.abs(verData.typingErrors - profErr);
+  const errScore = textOk ? Math.max(0, 100 - errDiff * 18) : 0;
+
+  /* Dot pattern */
+  const dotScore = verData.dotOrderOk ? 100 : 0;
+
+  /* Reaction time */
+  const rt      = verData.reactionMs || 500;
+  const profRt  = profile ? (profile.reactionMs || 350) : 350;
+  const rtScore = Math.max(0, Math.round(100 - (Math.abs(rt - profRt) / 250) * 40));
+
+  /* Overall: text match is a gate; biometrics weight the score */
+  const overall = Math.round(
+    0.25 * speedScore +
+    0.20 * errScore   +
+    0.40 * dotScore   +
+    0.15 * rtScore
+  );
+
+  /* Arc */
+  const color = overall >= 70 ? '#1e8e3e' : overall >= 45 ? '#b06000' : '#d93025';
+  $('overall-val').textContent = overall + '%';
+  $('overall-val').style.color = color;
+  const arc = $('arc-fill');
+  arc.style.stroke = color;
+  arc.style.strokeDashoffset = '314';
+  requestAnimationFrame(() => { arc.style.strokeDashoffset = String(314 - 314 * (overall / 100)); });
+
+  /* Verdict */
+  const vrd = $('verdict');
+  if(textOk && dotScore === 100 && overall >= 70){
+    vrd.className = 'verdict-pill ok';   vrd.textContent = '✓ Identity verified';
+  } else if(textOk && dotScore === 100){
+    vrd.className = 'verdict-pill warn'; vrd.textContent = '⚠ Typing pattern unusual';
+  } else if(textOk || dotScore === 100){
+    vrd.className = 'verdict-pill warn'; vrd.textContent = '⚠ Partial match';
+  } else {
+    vrd.className = 'verdict-pill fail'; vrd.textContent = '✗ Verification failed';
+  }
+
+  /* Score grid — 4 cells in 2×2 */
+  const grid = $('sgrid');
+  grid.innerHTML = '';
+  const cells = [
+    { l:'Typing Speed',  v: speedScore, c: speedScore >= 70 ? '#1e8e3e' : speedScore >= 45 ? '#b06000' : '#d93025',
+      sub: verData.typingMs > 0 ? `${(verData.typingMs/1000).toFixed(1)}s vs ${(profMs/1000).toFixed(1)}s` : '—' },
+    { l:'Typing Errors', v: errScore,   c: errScore >= 70 ? '#1e8e3e' : errScore >= 45 ? '#b06000' : '#d93025',
+      sub: `${verData.typingErrors} vs ${profErr} backspace${profErr!==1?'s':''}` },
+    { l:'Dot Pattern',   v: dotScore,   c: dotScore === 100 ? '#1e8e3e' : '#d93025',
+      sub: dotScore === 100 ? 'Correct order' : 'Wrong order' },
+    { l:'Reaction',      v: rtScore,    c: rtScore >= 60 ? '#1e8e3e' : '#b06000',
+      sub: verData.reactionMs ? `${verData.reactionMs}ms vs ${profRt}ms` : '—' },
+  ];
+  cells.forEach(({l, v, c, sub}) => {
+    const sc = document.createElement('div');
+    sc.className = 'score-cell';
+    sc.innerHTML = `<div class="lbl">${l}</div>
+      <div class="val" style="color:${c}">${v}%</div>
+      <div class="bar-bg"><div class="bar-fg" style="width:0%;background:${c}"></div></div>
+      <div style="font-size:10px;color:#80868b;margin-top:5px;line-height:1.3">${sub}</div>`;
+    grid.appendChild(sc);
+  });
+  requestAnimationFrame(() => {
+    const vals = [speedScore, errScore, dotScore, rtScore];
+    grid.querySelectorAll('.bar-fg').forEach((b, i) => b.style.width = vals[i] + '%');
+  });
+
+  showPage('page-dashboard');
+}
+
+/* ── nav ── */
+$('btn-goto-register').addEventListener('click',()=>{ resetRegister(); showPage('page-register'); });
+$('btn-goto-verify').addEventListener('click',()=>{
+  if(!loadProfile()){ show($('no-profile-msg')); setTimeout(()=>hide($('no-profile-msg')),2500); return; }
+  resetVerify(); showPage('page-verify');
+});
+$('r-back').addEventListener('click',()=>{ resetRegister(); showPage('page-home'); });
+$('v-back').addEventListener('click',()=>{ resetVerify(); showPage('page-home'); });
+$('btn-test-again').addEventListener('click',()=>{ resetVerify(); showPage('page-verify'); });
+$('btn-reregister').addEventListener('click',()=>{ clearProfile(); resetVerify(); resetRegister(); showPage('page-home'); });
+$('btn-simulate').addEventListener('click',()=>{
+  verData={passphraseOk:false,dotOrderOk:false,reactionMs:Math.round(200+Math.random()*600)};
+  showDashboard();
+});
+
+})();
+</script>
+</body>
+</html>
