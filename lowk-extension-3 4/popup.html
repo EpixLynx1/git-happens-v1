@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LowK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Google Sans', Roboto, Arial, sans-serif;
+      background: #fff;
+      width: 380px;
+      min-height: 480px;
+      color: #202124;
+    }
+
+    /* ── pages ── */
+    .page { display: flex; flex-direction: column; min-height: 480px; }
+    .hidden { display: none !important; }
+
+    /* ── header ── */
+    .hdr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 24px 0;
+    }
+    .logo {
+      width: 36px; height: 36px;
+      background: #1a73e8;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #fff; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .hdr-text h1 { font-size: 20px; font-weight: 500; color: #202124; }
+    .hdr-text p  { font-size: 12px; color: #5f6368; margin-top: 2px; }
+
+    /* ── body area ── */
+    .body { padding: 20px 24px; flex: 1; }
+
+    /* ── setup ── */
+    .setup-intro {
+      font-size: 13.5px;
+      color: #5f6368;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .field-wrap { margin-bottom: 16px; }
+    .field-wrap label { display: block; font-size: 12px; color: #5f6368; margin-bottom: 6px; }
+    .field-wrap input {
+      width: 100%;
+      border: 1.5px solid #dadce0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #202124;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .field-wrap input:focus { border-color: #1a73e8; }
+    .field-wrap input.error { border-color: #d93025; }
+
+    .hint {
+      font-size: 11.5px;
+      color: #5f6368;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .hint.err { color: #d93025; }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      min-height: 18px;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #dadce0;
+    }
+    .dot.fill  { background: #1a73e8; }
+
+    /* typing bar */
+    .t-bar-wrap { margin-top: 14px; }
+    .t-bar-label { font-size: 11px; color: #5f6368; margin-bottom: 4px; }
+    .t-bar-bg {
+      background: #f1f3f4;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .t-bar-fg {
+      height: 100%;
+      width: 0%;
+      background: #1a73e8;
+      border-radius: 4px;
+      transition: width .3s;
+    }
+
+    /* ── btn ── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 20px;
+      transition: background .15s;
+    }
+    .btn:hover  { background: #1765cc; }
+    .btn:active { background: #185abc; }
+    .btn:disabled { background: #dadce0; color: #80868b; cursor: default; }
+
+    .btn-ghost {
+      display: block;
+      background: none;
+      border: none;
+      color: #1a73e8;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+    }
+    .btn-ghost:hover { text-decoration: underline; }
+
+    /* ── success banner ── */
+    .success-banner {
+      background: #e6f4ea;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .success-banner .ico { font-size: 20px; line-height: 1; }
+    .success-banner p { font-size: 13px; color: #1e8e3e; line-height: 1.5; }
+
+    /* ── dashboard ── */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .pill.active  { background: #e6f4ea; color: #1e8e3e; }
+    .pill.warning { background: #fef7e0; color: #b06000; }
+
+    .section-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #5f6368;
+      margin-bottom: 10px;
+    }
+
+    .event-list { display: flex; flex-direction: column; gap: 8px; }
+    .event-card {
+      background: #f8f9fa;
+      border: 1px solid #e8eaed;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .trust-ring {
+      width: 42px; height: 42px;
+      flex-shrink: 0;
+    }
+    .trust-ring svg { width: 42px; height: 42px; transform: rotate(-90deg); }
+    .trust-ring circle { fill: none; stroke-width: 3.5; }
+    .ring-bg  { stroke: #e8eaed; }
+    .ring-fg  { stroke-dasharray: 100; transition: stroke-dashoffset .4s; }
+
+    .event-info { flex: 1; min-width: 0; }
+    .event-site {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .event-meta { font-size: 11.5px; color: #5f6368; margin-top: 2px; }
+
+    .trust-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: #5f6368;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .empty-state .ico { font-size: 32px; margin-bottom: 10px; }
+
+    /* ── footer ── */
+    .ftr {
+      padding: 12px 24px 16px;
+      border-top: 1px solid #f1f3f4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ftr span { font-size: 11px; color: #80868b; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ SETUP PAGE -->
+<div id="pg-setup" class="page hidden">
+  <div class="hdr">
+    <div class="logo">L</div>
+    <div class="hdr-text">
+      <h1>LowK</h1>
+      <p>First-time setup</p>
+    </div>
+  </div>
+  <div class="body">
+    <p class="setup-intro">
+      Type any passphrase below to capture your unique typing rhythm.
+      LowK will use this pattern to verify you whenever you sign in
+      to websites — with no passwords sent anywhere.
+    </p>
+
+    <div class="field-wrap">
+      <label for="email-input">Alert email address</label>
+      <input type="email" id="email-input" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <div class="field-wrap" style="margin-top:14px">
+      <label for="pp-input">Your passphrase (8+ characters)</label>
+      <input type="password" id="pp-input" placeholder="Type anything memorable…" autocomplete="off">
+      <div class="dots" id="pp-dots"></div>
+    </div>
+
+    <div class="t-bar-wrap" id="t-bar-wrap">
+      <div class="t-bar-label">Typing speed captured</div>
+      <div class="t-bar-bg"><div class="t-bar-fg" id="t-bar"></div></div>
+    </div>
+
+    <p class="hint" id="pp-hint">Minimum 8 characters. The text itself is never stored.</p>
+
+    <button class="btn" id="btn-register" disabled>Save my profile</button>
+  </div>
+  <div class="ftr">
+    <span>LowK v1.0</span>
+    <span>Biometrics stored locally</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ REGISTERED PAGE (brief) -->
+<div id="pg-registered" class="page hidden">
+  <div class="hdr">
+    <div class="logo">L</div>
+    <div class="hdr-text">
+      <h1>LowK</h1>
+      <p>Profile saved</p>
+    </div>
+  </div>
+  <div class="body">
+    <div class="success-banner">
+      <span class="ico">✓</span>
+      <p>Your typing profile is saved. LowK will now monitor sign-ins on this computer and flag unusual behaviour.</p>
+    </div>
+    <p class="hint" style="margin-bottom:16px">
+      Whenever you log into a website, LowK captures your typing rhythm from the password field and compares it to your registered pattern.
+    </p>
+    <p class="hint">
+      <strong>How to test it:</strong> Sign in to any website. Then reopen this popup to see the trust score.
+    </p>
+  </div>
+  <div class="ftr">
+    <span>LowK v1.0</span>
+    <button class="btn-ghost" id="btn-re-register-from-success" style="margin:0;width:auto;padding:0">Re-register</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ DASHBOARD PAGE -->
+<div id="pg-dash" class="page hidden">
+  <div class="hdr">
+    <div class="logo">L</div>
+    <div class="hdr-text">
+      <h1>LowK</h1>
+      <p>Sign-in monitor</p>
+    </div>
+  </div>
+  <div class="body">
+    <div class="section-label">Recent sign-ins</div>
+    <div class="event-list" id="event-list">
+      <div class="empty-state">
+        <div class="ico">🔍</div>
+        <div>No sign-ins captured yet.<br>Log in to any site and come back here.</div>
+      </div>
+    </div>
+  </div>
+  <div class="ftr">
+    <span>LowK v1.0</span>
+    <button class="btn-ghost" id="btn-re-register" style="margin:0;width:auto;padding:0">Re-register</button>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
